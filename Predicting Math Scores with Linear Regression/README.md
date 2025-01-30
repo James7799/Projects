@@ -9,14 +9,6 @@ This project aims to predict students' math scores based on various demographic 
 - Linear Regression model for prediction
 - Performance evaluation using R² score
 
-## Dataset
-The dataset used in this project is publicly available and can be downloaded from Google Drive. The following datasets are supported:
-- Salaries
-- Exams
-- College
-- Cars
-- Mall
-
 ## Installation & Setup
 1. Clone the repository:
    ```sh
