@@ -1,25 +1,119 @@
-Your code includes various sections, from data downloading, cleaning, and labeling to training, validating, and making inferences using a pre-trained model. Here's a summary of the steps:
+# Rice Leaf Disease Classification Project
 
-### 1. **Data Downloading and Preparation:**
-- **Data Downloading**: Downloads datasets using `kaggle datasets download`.
-- **Class Definition**: The `Downloadit` class manages the dataset, including parsing the images, creating class labels, and reading images.
-- **Data Analysis**: Visualizes class imbalances.
+This project focuses on classifying images of rice leaves to detect diseases using deep learning techniques. The dataset used in this project is the **Rice Leaf Disease Classification Dataset**, which contains images of healthy and diseased rice leaves. The goal is to build and train a model that can accurately classify these images into their respective categories.
 
-### 2. **Dataset Preprocessing and Augmentation:**
-- **Transformation**: Defines transformations for images like resizing, normalization, and tensor conversion.
-- **Splitting Dataset**: Splits data into training, validation, and test sets using `random_split`.
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Dataset](#dataset)
+3. [Model Architecture](#model-architecture)
+4. [Training and Validation](#training-and-validation)
+5. [Results](#results)
+6. [Inference](#inference)
+7. [Usage](#usage)
+8. [Dependencies](#dependencies)
+9. [License](#license)
 
-### 3. **Model Training:**
-- **Training Loop**: The function `model_train` handles the training loop, while `model_val` does the validation.
-- **Early Stopping**: Implements a simple early stopping mechanism based on validation accuracy improvement.
+## Project Overview
 
-### 4. **Model Creation and Optimization:**
-- **Model Setup**: Uses `timm` to create a pre-trained `rexnet_150` model.
-- **Loss Function and Optimizer**: Sets up `CrossEntropyLoss` with class weights and an Adam optimizer.
-- **Training Process**: Executes the training for the given number of epochs with patience-based early stopping.
+The project involves the following steps:
+- **Data Downloading**: The dataset is downloaded from Kaggle using the `kaggle datasets download` command.
+- **Data Preprocessing**: The dataset is preprocessed and split into training, validation, and test sets.
+- **Model Building**: A pre-trained model (`rexnet_150`) from the `timm` library is fine-tuned for the classification task.
+- **Training and Validation**: The model is trained and validated using the training and validation datasets.
+- **Inference**: The trained model is used to make predictions on the test dataset, and the results are visualized using Grad-CAM (Gradient-weighted Class Activation Mapping).
 
-### 5. **Inference and Visualization:**
-- **Learning Curves**: Plots the training/validation loss and accuracy curves.
-- **Feature Visualization**: Extracts and visualizes activations from the last convolutional layer using Class Activation Mapping (CAM).
-  
-You’re working on a dataset involving image classification (like leaf disease classification) and leveraging deep learning techniques with a pre-trained model for efficient learning. Would you like further guidance or assistance with specific sections of this process?
+## Dataset
+
+The dataset used in this project is the **Rice Leaf Disease Classification Dataset**, which can be downloaded from Kaggle using the following command:
+
+```bash
+kaggle datasets download -d killa92/rice-leaf-disease-classification-dataset
+```
+
+The dataset contains images of rice leaves with various diseases, and the goal is to classify these images into their respective categories.
+
+## Model Architecture
+
+### Pre-trained Model (`rexnet_150`)
+The pre-trained model used in this project is `rexnet_150` from the `timm` library. This model is fine-tuned on the rice leaf disease dataset for classification.
+
+## Training and Validation
+
+The training and validation process involves the following steps:
+- **Data Splitting**: The dataset is split into training (80%), validation (10%), and test (10%) sets.
+- **Data Augmentation**: Data augmentation techniques such as resizing, normalization, and random cropping are applied to the training data.
+- **Training**: The model is trained using the Adam optimizer and CrossEntropyLoss as the loss function.
+- **Validation**: The model's performance is evaluated on the validation set after each epoch.
+- **Early Stopping**: Training is stopped early if the validation accuracy does not improve for a specified number of epochs (patience).
+
+## Results
+
+The results of the training and validation process are visualized using learning curves, which show the training and validation loss and accuracy over epochs. The best model is saved based on the highest validation accuracy.
+
+### Learning Curves
+- **Training Loss vs. Validation Loss**: Shows the decrease in loss over epochs for both training and validation sets.
+- **Training Accuracy vs. Validation Accuracy**: Shows the increase in accuracy over epochs for both training and validation sets.
+
+## Inference
+
+The trained model is used to make predictions on the test dataset. The predictions are visualized using Grad-CAM, which highlights the regions of the image that the model focused on to make the prediction.
+
+### Grad-CAM Visualization
+- **Heatmap**: A heatmap is overlaid on the original image to show the regions that contributed most to the model's prediction.
+- **Ground Truth vs. Prediction**: The ground truth label and the predicted label are displayed for each image.
+
+## Usage
+
+To use this project, follow these steps:
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/your-username/rice-leaf-disease-classification.git
+   cd rice-leaf-disease-classification
+   ```
+
+2. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Download the Dataset**:
+   ```bash
+   kaggle datasets download -d killa92/rice-leaf-disease-classification-dataset
+   unzip rice-leaf-disease-classification-dataset.zip -d datasets_leaf
+   ```
+
+4. **Run the Training Script**:
+   ```bash
+   python train.py
+   ```
+
+5. **Run the Inference Script**:
+   ```bash
+   python inference.py
+   ```
+
+## Dependencies
+
+The following dependencies are required to run this project:
+- Python 3.x
+- PyTorch
+- torchvision
+- timm
+- numpy
+- matplotlib
+- opencv-python
+- tqdm
+
+You can install the dependencies using the following command:
+```bash
+pip install torch torchvision timm numpy matplotlib opencv-python tqdm
+```
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+This README provides an overview of the Rice Leaf Disease Classification Project. For more detailed information, please refer to the code and comments in the respective scripts.
