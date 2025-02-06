@@ -1,4 +1,4 @@
-# Car Brands Classification using Advanced Training Methods
+# Car Brands Classification with Triplet Loss
 
 This repository contains the code and resources for a car brand classification project. The goal of this project is to classify images of cars into different brands using deep learning techniques. The project leverages advanced training methods to significantly improve the model's accuracy from 87% to an impressive 99%.
 
