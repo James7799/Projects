@@ -24,7 +24,7 @@ I'm a passionate **AI Software Engineer** specializing in **deep learning, compu
 - **Lentil Classification** - Used transfer learning and Grad-CAM visualization.
 
 ## 📫 Get in Touch
-- **GitHub**: [Your GitHub Profile](https://github.com/James7799)
+- **GitHub**: [My GitHub Profile](https://github.com/James7799)
 - **Email**: trusunovjavoxir19980218@gmail.com
 
 Looking for exciting AI opportunities! 🚀
