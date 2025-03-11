@@ -1,61 +1,155 @@
-# Semantic Segmentation Project
+Semantic Segmentation Using Pre-trained and re-created and optimized model
 
-## Overview
-This repository contains the implementation of a **Semantic Segmentation** model using deep learning techniques. The project focuses on segmenting objects in images and assigning each pixel a class label, enabling precise object recognition and localization.
+This repository contains implementations of semantic segmentation using a U-Net-based deep learning model. The models were trained and evaluated on various datasets to achieve accurate segmentation results.
 
-## Features
-- **Deep Learning-Based Segmentation**: Utilizes state-of-the-art neural networks for segmentation tasks.
-- **Preprocessing Techniques**: Includes data augmentation, normalization, and resizing for better generalization.
-- **Model Training & Evaluation**: Implements a robust training pipeline with metrics such as IoU (Intersection over Union) and Dice Score.
-- **Visualization Tools**: Uses Grad-CAM and overlay techniques to interpret model predictions.
+Table of Contents
 
-## Installation
-### Prerequisites
-Ensure you have the following installed:
-- Python 3.x
-- PyTorch
-- OpenCV
-- NumPy
-- Matplotlib
-- Scikit-learn
+Introduction
 
-### Setup
-Clone the repository and install the dependencies:
-```sh
-git clone https://github.com/yourusername/segmentation_project.git
-cd segmentation_project
+Dataset
+
+Installation
+
+Usage
+
+Model Architectures
+
+Performance Metrics
+
+Pros & Cons
+
+Results
+
+Acknowledgments
+
+
+
+---
+
+Introduction
+
+Semantic segmentation is a crucial task in computer vision, where each pixel in an image is assigned a class label. This repository explores different implementations of U-Net for segmentation, comparing results across models.
+
+
+---
+
+Dataset
+
+The models were trained on datasets such as:
+
+Apple Disease Dataset
+
+Aeroscapes Semantic Segmentation Dataset
+
+Other segmentation datasets
+
+
+Data is automatically downloaded and structured using data_yuklab_olish().
+
+
+---
+
+Installation
+
+Clone the repository:
+
+git clone https://github.com/your-username/semantic-segmentation-unet.git
+cd semantic-segmentation-unet
+
+Install the required dependencies:
+
 pip install -r requirements.txt
-```
 
-## Usage
-### Training the Model
-Run the following command to train the model:
-```sh
-python train.py --epochs 50 --batch_size 16 --lr 0.001
-```
 
-### Evaluating the Model
-To evaluate the trained model:
-```sh
-python evaluate.py --model_path models/best_model.pth
-```
+---
 
-### Running Inference
-For segmenting images using a trained model:
-```sh
-python inference.py --image_path sample.jpg --model_path models/best_model.pth
-```
+Usage
 
-## Results
-The model achieves high accuracy in segmentation tasks, visualized through overlayed mask predictions.
+Training the Model
 
-## Contributing
-Contributions are welcome! Feel free to open issues or submit pull requests.
+Run the appropriate notebook:
 
-## License
-This project is licensed under the MIT License.
+jupyter notebook segmentation_using_re_created_unet_model.ipynb
 
-## Contact
-For any inquiries, reach out via email: [tursunovjavoxir19980218@gmail.com] or connect on [LinkedIn](https://linkedin.com/in/yourprofile).
+Modify hyperparameters as needed:
+
+batch_size = 32
+learning_rate = 0.001
+epochs = 50
+
+Inference
+
+After training, test the model on new images by running:
+
+model.predict(image)
+
+
+---
+
+Model Architectures
+
+1. Baseline U-Net Model
+
+Standard U-Net architecture
+
+Skip connections to preserve spatial information
+
+Used as a benchmark for other models
+
+
+
+2. Re-created U-Net with ConvTranspose
+
+Uses ConvTranspose2d for upsampling
+
+Improved segmentation boundaries
+
+
+
+3. Final Optimized U-Net
+
+Implements additional normalization
+
+Adjusted convolutional layers for efficiency
+
+
+
+
+
+---
+
+Performance Metrics
+
+
+---
+
+Pros & Cons
+
+Pros
+
+✅ Effective use of U-Net architecture for segmentation
+✅ Supports multiple datasets with automatic downloading
+✅ Uses data augmentation and normalization for improved results
+✅ Optimized version has improved accuracy and efficiency
+
+Cons
+
+❌ Requires a GPU for efficient training
+❌ Model size is relatively large for edge deployment
+❌ Training takes a long time for large datasets
+
+
+
+---
+
+Acknowledgments
+
+Special thanks to open-source datasets and libraries used in this project:
+
+PyTorch
+
+Albumentations
+
+Matplotlib
 
 
