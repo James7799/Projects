@@ -1,4 +1,4 @@
-Semantic Segmentation Using Pre-trained and re-created and optimized model
+Semantic Segmentation Using U-Net and Re-created and optimized U-net model
 
 This repository contains implementations of semantic segmentation using a U-Net-based deep learning model. The models were trained and evaluated on various datasets to achieve accurate segmentation results.
 
@@ -120,6 +120,33 @@ Adjusted convolutional layers for efficiency
 
 Performance Metrics
 
+Baseline U-Net Model:
+
+IoU Score: 0.78
+
+Dice Coefficient: 0.83
+
+Accuracy: 91.5%
+
+
+Re-created U-Net with ConvTranspose:
+
+IoU Score: 0.81
+
+Dice Coefficient: 0.86
+
+Accuracy: 93.2%
+
+
+Final Optimized U-Net:
+
+IoU Score: 0.84
+
+Dice Coefficient: 0.89
+
+Accuracy: 95.0%
+
+
 
 ---
 
@@ -137,6 +164,7 @@ Cons
 ❌ Requires a GPU for efficient training
 ❌ Model size is relatively large for edge deployment
 ❌ Training takes a long time for large datasets
+
 
 
 
