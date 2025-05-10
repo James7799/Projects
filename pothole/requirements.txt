@@ -1,6 +1,6 @@
-streamlit==1.45.0
-inference-sdk==0.49.1
-requests==2.32.3
+streamlit
+inference-sdk
+requests
 opencv-python-headless==4.9.0.80
-numpy<2
-pillow==11.2.1
+numpy
+pillow
