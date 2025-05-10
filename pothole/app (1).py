@@ -11,10 +11,10 @@ st.title("🕳️ Pothole and Crack Detection")
 st.write("Upload an image to detect potholes and cracks using Roboflow model.")
 
 # Initialize Roboflow client using secret API key
-api_key = st.secrets["roboflow"]["api_key"]
+
 CLIENT = InferenceHTTPClient(
     api_url="https://serverless.roboflow.com",
-    api_key=api_key
+    api_key="yFWOQegLigSIyK7DbeZP"
 )
 
 # File uploader
