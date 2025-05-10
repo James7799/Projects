@@ -1,11 +1,12 @@
-# Core dependencies
-ultralytics==8.2.0
 torch==2.2.2
-opencv-python-headless==4.9.0.80
-streamlit==1.32.2
-setuptools==68.0.0
-
-# Additional requirements
 numpy==1.26.4
-Pillow==10.1.0
-gdown==4.7.1  # For cloud weight downloads
+gdown==4.7.1 
+ultralytics==8.2.34
+opencv-python-headless==4.9.0.80
+
+# Interface
+streamlit==1.32.2
+pillow==10.3.0
+
+# System
+setuptools==70.0.0
