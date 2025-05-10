@@ -35,7 +35,7 @@ if uploaded_file is not None and model is not None:
     try:
         # Open the image
         image = Image.open(uploaded_file).convert("RGB")
-        st.image(image, caption="Uploaded Image", use_column_width=True)
+        st.image(image, caption="Uploaded Image", use_container_width==True)
 
         # Perform inference with progress
         with st.spinner("Running detection..."):
@@ -46,7 +46,7 @@ if uploaded_file is not None and model is not None:
             
             # Convert result image
             result_img = results[0].plot()  # result image with boxes
-            st.image(result_img, caption="Detected Image", use_column_width=True)
+            st.image(result_img, caption="Detected Image", use_container_width==True)
             
             # Show performance metrics
             inference_time = time.time() - start_time
