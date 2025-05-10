@@ -5,74 +5,73 @@ from PIL import Image
 from pathlib import Path
 import os
 import time
-import gdown
+from ultralytics import YOLO
 
-# Configuration
-os.environ['YOLO_CONFIG_DIR'] = str(Path.home() / '.config' / 'Ultralytics')
+# Cloud-friendly configuration
+os.environ['YOLO_CONFIG_DIR'] = '/tmp/ultralytics'
 os.makedirs(os.environ['YOLO_CONFIG_DIR'], exist_ok=True)
 
-# Streamlit setup
-st.set_page_config(page_title="Pothole Detection", layout="centered")
-st.title("🕳️ Pothole and Crack Detection")
-st.write("Upload an image to detect road damage")
+# Streamlit app setup
+st.set_page_config(page_title="Road Damage Detection", layout="centered")
+st.title("🛣️ Pothole & Crack Detection")
 
 @st.cache_resource
 def load_model():
     try:
-        model_path = Path("weights/best.pt")
-        model_path.parent.mkdir(exist_ok=True)
+        # Try loading from local weights first
+        if Path('weights/best.pt').exists():
+            return YOLO('weights/best.pt')
         
-        # Download weights if missing (Google Drive example)
-        if not model_path.exists():
-            with st.spinner("Downloading model weights..."):
-                gdown.download(
-                    "https://drive.google.com/uc?id=1zEyenhof2r5WfcaMtcpSqcRMqgGm1b9O",
-                    str(model_path),
-                    quiet=False
-                )
-        
-        # Load model
-        model = torch.hub.load(
-            'ultralytics/yolov5', 
-            'custom', 
-            path=str(model_path),
-            trust_repo=True
-        )
-        return model
-        
+        # Fallback to pretrained model
+        st.warning("Using standard YOLOv8 model (custom weights not found)")
+        return YOLO('yolov8n.pt')
     except Exception as e:
-        st.error(f"""Model loading failed: {str(e)}
-        
-        Solutions:
-        1. For local use: Place 'best.pt' in /weights/
-        2. For cloud: Update Google Drive ID
-        3. Check console logs""")
+        st.error(f"Model loading failed: {str(e)}")
         return None
 
 model = load_model()
 
-# File uploader
-uploaded_file = st.file_uploader("Choose road image...", type=["jpg", "jpeg", "png"])
+# File upload section
+col1, col2 = st.columns(2)
+with col1:
+    img_file = st.file_uploader("Upload road image", type=["jpg", "jpeg", "png"])
+with col2:
+    weight_file = st.file_uploader("Upload custom weights (.pt)", type=["pt"])
 
-if uploaded_file and model:
-    try:
-        img = Image.open(uploaded_file).convert("RGB")
-        st.image(img, caption="Original Image", use_container_width=True)
+# Handle weight upload
+if weight_file:
+    with st.spinner("Updating model..."):
+        with open('weights/best.pt', 'wb') as f:
+            f.write(weight_file.getbuffer())
+        st.cache_resource.clear()
+        st.rerun()
+
+# Process image
+if img_file and model:
+    img = Image.open(img_file).convert("RGB")
+    with st.expander("Original Image", expanded=True):
+        st.image(img, use_container_width=True)
+    
+    with st.spinner("Detecting road damage..."):
+        start = time.time()
+        results = model(img)
+        inference_time = time.time() - start
         
-        with st.spinner("Analyzing road surface..."):
-            start = time.time()
-            results = model(img)
+        with st.expander("Detection Results", expanded=True):
             st.image(
-                results.render()[0], 
-                caption=f"Detections ({time.time()-start:.2f}s)",
+                results[0].plot(), 
+                caption=f"Processed in {inference_time:.2f}s | Confidence threshold: 0.5",
                 use_container_width=True
             )
-            
-            # Display results
-            counts = results.pandas().xyxy[0]['name'].value_counts()
-            st.write("**Detection Summary:**")
-            for obj, count in counts.items():
-                st.write(f"- {count} {obj}{'s' if count > 1 else ''}")
-                
-    except Exception as e:
-        st.error(f"Detection error: {str(e)}")
+        
+        # Display detection metrics
+        detections = results[0].boxes
+        if len(detections) == 0:
+            st.success("✅ No road damage detected")
+        else:
+            st.warning(f"🚨 Detected {len(detections)} road damage instances:")
+            for cls_id in detections.cls.unique():
+                cls_name = results[0].names[int(cls_id)]
+                count = sum(detections.cls == cls_id)
+                conf = detections[detections.cls == cls_id].conf.mean()
+                st.write(f"- {count} {cls_name}(s) with average confidence {conf:.2f}")
