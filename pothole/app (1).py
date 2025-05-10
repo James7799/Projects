@@ -1,4 +1,5 @@
 import streamlit as st
+import cv2
 from inference_sdk import InferenceHTTPClient
 from PIL import Image
 import requests
