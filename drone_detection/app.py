@@ -10,10 +10,10 @@ import io
 import time
 
 # Set page config
-st.set_page_config(page_title="Drone Detection", layout="centered")
+st.set_page_config(page_title="Pothole and crack detection", layout="centered")
 
-st.title("🛸 Drone Detection using YOLOv11")
-st.write("Upload an image to detect drones using a trained YOLO model.")
+st.title("pothole and crack detection")
+st.write("Upload an image to detect pothole and crack detection on the road")
 
 # Load YOLO model with error handling
 @st.cache_resource
