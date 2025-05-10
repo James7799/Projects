@@ -1,5 +1,5 @@
 import numpy as np
-np.import_array()  # Explicitly initialize NumPy C-API
+# np.import_array()  # Explicitly initialize NumPy C-API
 import cv2
 import torch
 from ultralytics import YOLO
