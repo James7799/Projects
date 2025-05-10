@@ -1,81 +1,78 @@
-import numpy as np
-import pkg_resources 
 import cv2
 import torch
-from ultralytics import YOLO
 import streamlit as st
-from ultralytics import YOLO
 from PIL import Image
-import io
-import time
 from pathlib import Path
 import os
+import time
+import gdown
 
-# Set page config
-st.set_page_config(page_title="Pothole and crack detection", layout="centered")
-
-st.title("Pothole and crack detection")
-st.write("Upload an image to detect pothole and crack detection on the road")
+# Configuration
 os.environ['YOLO_CONFIG_DIR'] = str(Path.home() / '.config' / 'Ultralytics')
 os.makedirs(os.environ['YOLO_CONFIG_DIR'], exist_ok=True)
-# Load YOLO model with error handling
+
+# Streamlit setup
+st.set_page_config(page_title="Pothole Detection", layout="centered")
+st.title("🕳️ Pothole and Crack Detection")
+st.write("Upload an image to detect road damage")
+
 @st.cache_resource
 def load_model():
     try:
-        # Solution for torch.hub untrusted repo warning
-        torch.hub.set_dir(str(Path(__file__).parent / 'torch_hub_cache'))
+        model_path = Path("weights/best.pt")
+        model_path.parent.mkdir(exist_ok=True)
         
-        # Load model with explicit trust
+        # Download weights if missing (Google Drive example)
+        if not model_path.exists():
+            with st.spinner("Downloading model weights..."):
+                gdown.download(
+                    "https://drive.google.com/uc?id=1zEyenhof2r5WfcaMtcpSqcRMqgGm1b9O",
+                    str(model_path),
+                    quiet=False
+                )
+        
+        # Load model
         model = torch.hub.load(
-            'ultralytics/yolo11',
-            'custom',
-            path='best.pt',
-            trust_repo=True  # Required for torch>=2.0
+            'ultralytics/yolov5', 
+            'custom', 
+            path=str(model_path),
+            trust_repo=True
         )
-        
-        st.success("Model loaded successfully!")
         return model
         
     except Exception as e:
         st.error(f"""Model loading failed: {str(e)}
         
-        Common solutions:
-        1. Ensure 'best.pt' exists in your project directory
-        2. Check internet connection for hub download
-        3. Verify sufficient disk space""")
+        Solutions:
+        1. For local use: Place 'best.pt' in /weights/
+        2. For cloud: Update Google Drive ID
+        3. Check console logs""")
         return None
 
 model = load_model()
 
 # File uploader
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("Choose road image...", type=["jpg", "jpeg", "png"])
 
-if uploaded_file is not None and model is not None:
+if uploaded_file and model:
     try:
-        # Open the image
-        image = Image.open(uploaded_file).convert("RGB")
-        st.image(image, caption="Uploaded Image", use_container_width=True)
-
-        # Perform inference with progress
-        with st.spinner("Running detection..."):
-            start_time = time.time()
+        img = Image.open(uploaded_file).convert("RGB")
+        st.image(img, caption="Original Image", use_container_width=True)
+        
+        with st.spinner("Analyzing road surface..."):
+            start = time.time()
+            results = model(img)
+            st.image(
+                results.render()[0], 
+                caption=f"Detections ({time.time()-start:.2f}s)",
+                use_container_width=True
+            )
             
-            # Run prediction (remove device=0 if not using GPU)
-            results = model.predict(image, verbose=False)
-            
-            # Convert result image
-            result_img = results[0].plot()  # result image with boxes
-            st.image(result_img, caption="Detected Image", use_container_width=True)
-            
-            # Show performance metrics
-            inference_time = time.time() - start_time
-            st.success(f"Detection completed in {inference_time:.2f} seconds!")
-            
-            # Show detection details
-            for result in results:
-                st.write(f"Detected {len(result.boxes)} objects:")
-                for box in result.boxes:
-                    st.write(f"- {result.names[box.cls.item()]} with confidence {box.conf.item():.2f}")
-
+            # Display results
+            counts = results.pandas().xyxy[0]['name'].value_counts()
+            st.write("**Detection Summary:**")
+            for obj, count in counts.items():
+                st.write(f"- {count} {obj}{'s' if count > 1 else ''}")
+                
     except Exception as e:
-        st.error(f"Error during detection: {str(e)}")
+        st.error(f"Detection error: {str(e)}")
