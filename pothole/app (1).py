@@ -1,55 +1,62 @@
 import streamlit as st
+from roboflow import Roboflow
+import supervision as sv
 import cv2
-from inference_sdk import InferenceHTTPClient
+import numpy as np
 from PIL import Image
-import requests
-import io
+import tempfile
 
-# Page settings
-st.set_page_config(page_title="Pothole and Crack Detection", layout="centered")
-st.title("🕳️ Pothole and Crack Detection")
-st.write("Upload an image to detect potholes and cracks using Roboflow model.")
+# Set page config
+st.set_page_config(layout="wide")
+st.title("🚧 Pothole Detection System")
 
-# Initialize Roboflow client using secret API key
+# Initialize Roboflow model
+@st.cache_resource
+def load_model():
+    rf = Roboflow(api_key="yFWOQegLigSIyK7DbeZP")
+    project = rf.workspace().project("road-potholes-and-cracks-jmxtp")
+    return project.version(3).model
 
-CLIENT = InferenceHTTPClient(
-    api_url="https://serverless.roboflow.com",
-    api_key="yFWOQegLigSIyK7DbeZP"
-)
+model = load_model()
 
 # File uploader
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("Upload a road image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    try:
-        # Load and display original image
-        image = Image.open(uploaded_file).convert("RGB")
-        st.image(image, caption="Uploaded Image", use_container_width=True)
-
-        # Save image to bytes buffer
-        image_bytes = io.BytesIO()
-        image.save(image_bytes, format="JPEG")
-        image_bytes.seek(0)
-
-        # Inference
-        with st.spinner("Detecting..."):
-            result = CLIENT.infer(image_bytes, model_id="road-potholes-and-cracks-jmxtp/3")
-
-        # Show JSON result
-        st.subheader("🧾 Detection Result")
-        st.json(result)
-
-        # Display detections on image if available
-        if "image" in result and result["image"].get("url"):
-            image_url = result["image"]["url"]
-            response = requests.get(image_url)
-            if response.status_code == 200:
-                annotated_image = Image.open(io.BytesIO(response.content))
-                st.image(annotated_image, caption="Detected Objects", use_container_width=True)
-            else:
-                st.warning("Could not load annotated image from Roboflow.")
-        else:
-            st.warning("No detections found in the image.")
-
-    except Exception as e:
-        st.error(f"Error during detection: {str(e)}")
+    # Read the image
+    image = Image.open(uploaded_file)
+    image_np = np.array(image)
+    
+    # Save to temp file for prediction
+    with tempfile.NamedTemporaryFile(suffix=".jpg") as temp:
+        image.save(temp.name)
+        
+        # Make prediction
+        result = model.predict(temp.name, confidence=40, overlap=30).json()
+    
+    # Process detections
+    labels = [item["class"] for item in result["predictions"]]
+    detections = sv.Detections.from_roboflow(result)
+    
+    # Annotate image
+    label_annotator = sv.LabelAnnotator()
+    mask_annotator = sv.MaskAnnotator()
+    
+    annotated_image = mask_annotator.annotate(scene=image_np.copy(), detections=detections)
+    annotated_image = label_annotator.annotate(
+        scene=annotated_image, 
+        detections=detections, 
+        labels=labels
+    )
+    
+    # Display results
+    col1, col2 = st.columns(2)
+    with col1:
+        st.image(image, caption="Original Image", use_column_width=True)
+    with col2:
+        st.image(annotated_image, caption="Detected Potholes", use_column_width=True)
+    
+    # Show detection summary
+    st.subheader("Detection Summary")
+    st.write(f"Found {len(detections)} potholes/cracks")
+    st.json(result)
