@@ -4,6 +4,7 @@ from ultralytics import YOLO
 from PIL import Image
 import numpy as np
 import io
+import time
 
 # Set page config
 st.set_page_config(page_title="Drone Detection", layout="centered")
@@ -11,26 +12,48 @@ st.set_page_config(page_title="Drone Detection", layout="centered")
 st.title("🛸 Drone Detection using YOLOv11")
 st.write("Upload an image to detect drones using a trained YOLO model.")
 
-# Load YOLO model (make sure the .pt file is in the same directory or update the path)
+# Load YOLO model with error handling
 @st.cache_resource
 def load_model():
-    model = torch.hub.load("ultralytics/yolo11", "custom", path="yolo11n.pt", force_reload=True)
-    return model
+    try:
+        # Update this path to your actual model file
+        model = YOLO("yolo11n.pt")  # Using YOLO interface instead of torch.hub
+        return model
+    except Exception as e:
+        st.error(f"Failed to load model: {str(e)}")
+        return None
 
 model = load_model()
 
 # File uploader
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-if uploaded_file is not None:
-    # Open the image
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+if uploaded_file is not None and model is not None:
+    try:
+        # Open the image
+        image = Image.open(uploaded_file).convert("RGB")
+        st.image(image, caption="Uploaded Image", use_column_width=True)
 
-    # Perform inference
-    with st.spinner("Running detection..."):
-        results = model.predict(image, device=0, verbose=False)
+        # Perform inference with progress
+        with st.spinner("Running detection..."):
+            start_time = time.time()
+            
+            # Run prediction (remove device=0 if not using GPU)
+            results = model.predict(image, verbose=False)
+            
+            # Convert result image
+            result_img = results[0].plot()  # result image with boxes
+            st.image(result_img, caption="Detected Image", use_column_width=True)
+            
+            # Show performance metrics
+            inference_time = time.time() - start_time
+            st.success(f"Detection completed in {inference_time:.2f} seconds!")
+            
+            # Show detection details
+            for result in results:
+                st.write(f"Detected {len(result.boxes)} objects:")
+                for box in result.boxes:
+                    st.write(f"- {result.names[box.cls.item()]} with confidence {box.conf.item():.2f}")
 
-        # Convert result image
-        result_img = results[0].plot()  # result image with boxes
-        st.image(result_img, caption="Detected Image", use_column_width=True)
+    except Exception as e:
+        st.error(f"Error during detection: {str(e)}")
