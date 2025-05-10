@@ -33,15 +33,13 @@ uploaded_file = st.file_uploader("Upload a road image...", type=["jpg", "jpeg", 
 
 if uploaded_file is not None:
     try:
-        # Read the image
+        # Read the image and convert to RGB if needed
         image = Image.open(uploaded_file)
+        if image.mode == 'RGBA':
+            image = image.convert('RGB')
         image_np = np.array(image)
         
-        # Convert to RGB if needed
-        if image_np.shape[-1] == 4:  # RGBA image
-            image_np = cv2.cvtColor(image_np, cv2.COLOR_RGBA2RGB)
-        
-        # Save to temp file properly
+        # Save to temp file (as JPEG for RGBA-converted or original RGB images)
         with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp:
             temp_path = temp.name
             image.save(temp_path, format="JPEG", quality=95)
@@ -82,4 +80,4 @@ if uploaded_file is not None:
                 os.unlink(temp_path)
                 
     except Exception as e:
-        st.error(f"Error processing image: {e}")
+        st.error(f"Error processing image: {str(e)}")
