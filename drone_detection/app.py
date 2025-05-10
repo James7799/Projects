@@ -14,7 +14,7 @@ st.write("Upload an image to detect drones using a trained YOLO model.")
 # Load YOLO model (make sure the .pt file is in the same directory or update the path)
 @st.cache_resource
 def load_model():
-    model = YOLO("yolo11n.pt")
+    model = torch.hub.load("ultralytics/yolo11", "custom", path="yolo11n.pt", force_reload=True)
     return model
 
 model = load_model()
