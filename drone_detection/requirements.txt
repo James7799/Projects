@@ -2,7 +2,7 @@
 git+https://github.com/ultralytics/ultralytics.git
 opencv-python-headless>=4.5.0 
 ultralytics>=8.0.0
-
+torch==2.0.1 --index-url https://download.pytorch.org/whl/cpu
 # For custom YOLOv11
 streamlit
 Pillow
