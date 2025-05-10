@@ -39,14 +39,18 @@ if uploaded_file is not None:
             image = image.convert('RGB')
         image_np = np.array(image)
         
-        # Save to temp file (as JPEG for RGBA-converted or original RGB images)
+        # Save to temp file
         with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp:
             temp_path = temp.name
             image.save(temp_path, format="JPEG", quality=95)
         
         try:
-            # Make prediction
-            result = model.predict(temp_path, confidence=40, overlap=30).json()
+            # Make prediction with updated parameter names
+            result = model.predict(
+                temp_path, 
+                confidence=40, 
+                iou_threshold=30  # Changed from 'overlap' to 'iou_threshold'
+            ).json()
             
             # Process detections
             labels = [item["class"] for item in result["predictions"]]
