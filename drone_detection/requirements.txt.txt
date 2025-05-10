@@ -1,4 +1,5 @@
 # For official ultralytics
+PyTorch>=1.8
 ultralytics>=8.0.0
 
 # For custom YOLOv11
