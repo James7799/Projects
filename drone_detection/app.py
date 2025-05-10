@@ -1,5 +1,4 @@
 import numpy as np
-# np.import_array()  # Explicitly initialize NumPy C-API
 import cv2
 import torch
 from ultralytics import YOLO
@@ -12,7 +11,7 @@ import time
 # Set page config
 st.set_page_config(page_title="Pothole and crack detection", layout="centered")
 
-st.title("pothole and crack detection")
+st.title("Pothole and crack detection")
 st.write("Upload an image to detect pothole and crack detection on the road")
 
 # Load YOLO model with error handling
