@@ -27,9 +27,9 @@ def load_model():
         
         # Load model with explicit trust
         model = torch.hub.load(
-            'ultralytics/yolov5',
+            'ultralytics/yolo11',
             'custom',
-            path='weights/best.pt',
+            path='best.pt',
             trust_repo=True  # Required for torch>=2.0
         )
         
