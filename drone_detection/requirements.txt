@@ -1,10 +1,9 @@
 # For official ultralytics
+numpy==1.26.4
 git+https://github.com/ultralytics/ultralytics.git
 torch==2.2.2  # Using the latest stable version available
 python-3.10.13
-opencv-python-headless==4.9.0.80
-numpy>=1.21.0  # Required dependency
-streamlit>=1.28.0
-Pillow>=9.0.0
-
+opencv-python-headless==4.8.1.78
+streamlit==1.32.0
+Pillow==10.1.0
 
