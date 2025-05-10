@@ -45,11 +45,11 @@ if uploaded_file is not None:
             image.save(temp_path, format="JPEG", quality=95)
         
         try:
-            # Make prediction with updated parameter names
+            # Make prediction with correct parameters
             result = model.predict(
                 temp_path, 
-                confidence=40, 
-                iou_threshold=30  # Changed from 'overlap' to 'iou_threshold'
+                confidence=40
+                # Removed both overlap and iou_threshold as they're not needed
             ).json()
             
             # Process detections
@@ -82,6 +82,9 @@ if uploaded_file is not None:
             # Clean up temp file
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
+                
+    except Exception as e:
+        st.error(f"Error processing image: {str(e)}")
                 
     except Exception as e:
         st.error(f"Error processing image: {str(e)}")
