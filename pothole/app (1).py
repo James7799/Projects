@@ -1,10 +1,20 @@
+
+
 import streamlit as st
-from roboflow import Roboflow
-import supervision as sv
-import cv2
 import numpy as np
 from PIL import Image
 import tempfile
+
+# Use try-except for imports
+try:
+    from roboflow import Roboflow
+    import supervision as sv
+    import cv2
+except ImportError as e:
+    st.error(f"Import error: {e}")
+    st.stop()
+
+# Rest of your app code...
 
 # Set page config
 st.set_page_config(layout="wide")
