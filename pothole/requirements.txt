@@ -1,6 +1,7 @@
-streamlit
-inference-sdk
+streamlit==1.24.1
+pandas>=2.0
+numpy<=1.25.1
+opencv-python-headless
+Pillow
 requests
-opencv-python-headless==4.9.0.80
-numpy
-pillow
+inference-sdk
