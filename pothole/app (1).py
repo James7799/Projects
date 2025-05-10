@@ -16,7 +16,6 @@ except ImportError as e:
 
 # Rest of your app code...
 
-# Set page config
 st.set_page_config(layout="wide")
 st.title("🚧 Pothole Detection System")
 
@@ -33,40 +32,54 @@ model = load_model()
 uploaded_file = st.file_uploader("Upload a road image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    # Read the image
-    image = Image.open(uploaded_file)
-    image_np = np.array(image)
-    
-    # Save to temp file for prediction
-    with tempfile.NamedTemporaryFile(suffix=".jpg") as temp:
-        image.save(temp.name)
+    try:
+        # Read the image
+        image = Image.open(uploaded_file)
+        image_np = np.array(image)
         
-        # Make prediction
-        result = model.predict(temp.name, confidence=40, overlap=30).json()
-    
-    # Process detections
-    labels = [item["class"] for item in result["predictions"]]
-    detections = sv.Detections.from_roboflow(result)
-    
-    # Annotate image
-    label_annotator = sv.LabelAnnotator()
-    mask_annotator = sv.MaskAnnotator()
-    
-    annotated_image = mask_annotator.annotate(scene=image_np.copy(), detections=detections)
-    annotated_image = label_annotator.annotate(
-        scene=annotated_image, 
-        detections=detections, 
-        labels=labels
-    )
-    
-    # Display results
-    col1, col2 = st.columns(2)
-    with col1:
-        st.image(image, caption="Original Image", use_column_width=True)
-    with col2:
-        st.image(annotated_image, caption="Detected Potholes", use_column_width=True)
-    
-    # Show detection summary
-    st.subheader("Detection Summary")
-    st.write(f"Found {len(detections)} potholes/cracks")
-    st.json(result)
+        # Convert to RGB if needed
+        if image_np.shape[-1] == 4:  # RGBA image
+            image_np = cv2.cvtColor(image_np, cv2.COLOR_RGBA2RGB)
+        
+        # Save to temp file properly
+        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as temp:
+            temp_path = temp.name
+            image.save(temp_path, format="JPEG", quality=95)
+        
+        try:
+            # Make prediction
+            result = model.predict(temp_path, confidence=40, overlap=30).json()
+            
+            # Process detections
+            labels = [item["class"] for item in result["predictions"]]
+            detections = sv.Detections.from_roboflow(result)
+            
+            # Annotate image
+            label_annotator = sv.LabelAnnotator()
+            mask_annotator = sv.MaskAnnotator()
+            
+            annotated_image = mask_annotator.annotate(scene=image_np.copy(), detections=detections)
+            annotated_image = label_annotator.annotate(
+                scene=annotated_image, 
+                detections=detections, 
+                labels=labels
+            )
+            
+            # Display results
+            col1, col2 = st.columns(2)
+            with col1:
+                st.image(image, caption="Original Image", use_column_width=True)
+            with col2:
+                st.image(annotated_image, caption="Detected Potholes", use_column_width=True)
+            
+            # Show detection summary
+            st.subheader("Detection Summary")
+            st.write(f"Found {len(detections)} potholes/cracks")
+            
+        finally:
+            # Clean up temp file
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
+                
+    except Exception as e:
+        st.error(f"Error processing image: {e}")
