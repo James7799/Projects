@@ -1,7 +1,6 @@
 # For official ultralytics
 git+https://github.com/ultralytics/ultralytics.git
 torch==2.2.2  # Using the latest stable version available
-ultralytics==8.2.0
 opencv-python-headless==4.9.0.80
 numpy>=1.21.0  # Required dependency
 streamlit>=1.28.0
