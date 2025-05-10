@@ -1,5 +1,6 @@
 # For official ultralytics
 git+https://github.com/ultralytics/ultralytics.git
+opencv-python-headless>=4.5.0 
 ultralytics>=8.0.0
 
 # For custom YOLOv11
