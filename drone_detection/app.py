@@ -1,8 +1,11 @@
+import numpy as np
+np.import_array()  # Explicitly initialize NumPy C-API
+import cv2
 import torch
+from ultralytics import YOLO
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
-import numpy as np
 import io
 import time
 
