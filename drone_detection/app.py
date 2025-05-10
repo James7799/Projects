@@ -7,22 +7,41 @@ from ultralytics import YOLO
 from PIL import Image
 import io
 import time
+from pathlib import Path
+import os
 
 # Set page config
 st.set_page_config(page_title="Pothole and crack detection", layout="centered")
 
 st.title("Pothole and crack detection")
 st.write("Upload an image to detect pothole and crack detection on the road")
-
+os.environ['YOLO_CONFIG_DIR'] = str(Path.home() / '.config' / 'Ultralytics')
+os.makedirs(os.environ['YOLO_CONFIG_DIR'], exist_ok=True)
 # Load YOLO model with error handling
 @st.cache_resource
 def load_model():
     try:
-        # Update this path to your actual model file
-        model = torch.hub.load('ultralytics/yolo11', 'custom', path='weights/best.pt')  # Using YOLO interface instead of torch.hub
+        # Solution for torch.hub untrusted repo warning
+        torch.hub.set_dir(str(Path(__file__).parent / 'torch_hub_cache'))
+        
+        # Load model with explicit trust
+        model = torch.hub.load(
+            'ultralytics/yolov5',
+            'custom',
+            path='weights/best.pt',
+            trust_repo=True  # Required for torch>=2.0
+        )
+        
+        st.success("Model loaded successfully!")
         return model
+        
     except Exception as e:
-        st.error(f"Failed to load model: {str(e)}")
+        st.error(f"""Model loading failed: {str(e)}
+        
+        Common solutions:
+        1. Ensure 'best.pt' exists in your project directory
+        2. Check internet connection for hub download
+        3. Verify sufficient disk space""")
         return None
 
 model = load_model()
