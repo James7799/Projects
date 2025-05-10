@@ -19,7 +19,7 @@ st.write("Upload an image to detect pothole and crack detection on the road")
 def load_model():
     try:
         # Update this path to your actual model file
-        model = YOLO('weights/best.pt')  # Using YOLO interface instead of torch.hub
+        model = torch.hub.load('ultralytics/yolo11', 'custom', path='weights/best.pt')  # Using YOLO interface instead of torch.hub
         return model
     except Exception as e:
         st.error(f"Failed to load model: {str(e)}")
