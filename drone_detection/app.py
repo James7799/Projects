@@ -1,4 +1,5 @@
 import numpy as np
+import pkg_resources 
 import cv2
 import torch
 from ultralytics import YOLO
