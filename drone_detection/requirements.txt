@@ -1,7 +1,7 @@
 torch==2.2.2
 numpy==1.26.4
 gdown==4.7.1 
-ultralytics==8.2.34
+ultralytics==8.3.130
 opencv-python-headless==4.9.0.80
 
 # Interface
