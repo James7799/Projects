@@ -3,6 +3,6 @@ PyTorch>=1.8
 ultralytics>=8.0.0
 
 # For custom YOLOv11
-git+https://github.com/[https://github.com/ultralytics/ultralytics.git].git
+git+https://github.com/ultralytics/ultralytics.git
 streamlit
 Pillow
