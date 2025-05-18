@@ -25,7 +25,7 @@ I'm a passionate **AI Software Engineer** specializing in **deep learning, compu
 
 ### 🔹 **Semantic Segmentation**
 - **Cardiac** - Built a regression model with R² score of 0.856.
-- **Leaf desease** - Achieved high accuracy with ResNet18 and custom CNN.
+- **Leaf disease** - Semantic Segmentation Using U-Net and Re-created and optimized U-net model
 
 ### 🔹 **YOLO demo for cracks and pothole detections on the road**
 -**This one is trained by me** -(https://potholeandcrackdetection.streamlit.app/)
