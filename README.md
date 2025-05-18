@@ -24,7 +24,7 @@ I'm a passionate **AI Software Engineer** specializing in **deep learning, compu
 - **Lentil Classification** - Used transfer learning and Grad-CAM visualization.
 
 ### 🔹 **Semantic Segmentation**
-- **Cardiac** - Built a regression model with R² score of 0.856.
+- **Cardiac** - Cardiac segmentation with these results: IoU Score	0.85, Dice Coefficient	0.91, Accuracy	94.3%
 - **Leaf disease** - Semantic Segmentation Using U-Net and Re-created and optimized U-net model
 
 ### 🔹 **YOLO demo for cracks and pothole detections on the road**
@@ -33,6 +33,7 @@ I'm a passionate **AI Software Engineer** specializing in **deep learning, compu
 ## 📫 Get in Touch
 - **GitHub**: [My GitHub Profile](https://github.com/James7799)
 - **Email**: trusunovjavoxir19980218@gmail.com
+- **Tel**: + 8210 - 3491 - 7077
 
 Looking for exciting AI opportunities! 🚀
 
