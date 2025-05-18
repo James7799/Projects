@@ -23,9 +23,13 @@ I'm a passionate **AI Software Engineer** specializing in **deep learning, compu
 - **Ant and Bee Image Classification** - Achieved high accuracy with ResNet18 and custom CNN.
 - **Lentil Classification** - Used transfer learning and Grad-CAM visualization.
 
+### 🔹 **Semantic Segmentation**
+- **Cardiac** - Built a regression model with R² score of 0.856.
+- **Leaf desease** - Achieved high accuracy with ResNet18 and custom CNN.
+
 ### 🔹 **YOLO demo for cracks and pothole detections on the road**
--This one is trained by me (https://potholeandcrackdetection.streamlit.app/)
--And for this one I got the API from Roboflow (https://projects-kig68cgkkjyu2iqxyqnnxg.streamlit.app/)
+-**This one is trained by me** -(https://potholeandcrackdetection.streamlit.app/)
+-**And for this one I got the API from Roboflow** -(https://projects-kig68cgkkjyu2iqxyqnnxg.streamlit.app/)
 ## 📫 Get in Touch
 - **GitHub**: [My GitHub Profile](https://github.com/James7799)
 - **Email**: trusunovjavoxir19980218@gmail.com
