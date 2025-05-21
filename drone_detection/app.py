@@ -6,8 +6,10 @@ import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
 import io
-import time
+import time, os
 
+
+model_path = os.path.join(os.path.dirname(__file__), 'best.pt')
 # Set page config
 st.set_page_config(page_title="Pothole and crack detection", layout="centered")
 
@@ -16,16 +18,16 @@ st.write("Upload an image to detect pothole and crack detection on the road")
 
 # Load YOLO model with error handling
 @st.cache_resource
-def load_model():
+def load_model(path):
     try:
         # Update this path to your actual model file
-        model = torch.load('best.pt')  # Using YOLO interface instead of torch.hub
+        model = YOLO(path)  # Using YOLO interface instead of torch.hub
         return model
     except Exception as e:
         st.error(f"Failed to load model: {str(e)}")
         return None
 
-model = load_model()
+model = load_model(model_path)
 
 # File uploader
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
