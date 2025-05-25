@@ -1,5 +1,5 @@
 import numpy as np
-import cv2
+
 import torch
 from ultralytics import YOLO
 import streamlit as st
