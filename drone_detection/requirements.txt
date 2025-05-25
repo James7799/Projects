@@ -10,4 +10,4 @@ pillow==10.3.0
 
 # System
 setuptools==70.0.0
-opencv-python-headless==4.9.0.80
+opencv-python-headless
